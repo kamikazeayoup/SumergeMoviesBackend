@@ -6,10 +6,13 @@ import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.TestPropertySource;
 
 import java.security.Key;
 
@@ -17,9 +20,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-public class GenerateTokenTest {
-    String SECRET_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNjgyMDUwNywiaWF0IjoxNzA2ODIwNTA3fQ.2OTNSHysmHT62VmcOjSDxY-hZxTmoxfkfEOahY3A7_o";
+@SpringBootTest
 
+@TestPropertySource("classpath:test-application.properties")
+
+public class GenerateTokenTest {
+    @Value("${jwt.secret-key}")
+
+    String SECRET_KEY;
+    @Value("${jwt.expiration}")
+
+    long JWT_EXPIRATION;
     @InjectMocks
     private JwtGenerator jwtGenerator;
     @Mock
@@ -27,11 +38,13 @@ public class GenerateTokenTest {
 
     @BeforeEach
     public void init() {
+        jwtGenerator.SECRET_KEY = SECRET_KEY;
+        jwtGenerator.JWT_EXPIRATION = JWT_EXPIRATION;
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    void generateToken(){
-        LoginDto loginDto = new LoginDto("m@a.com", "192009alaa");
+    void generateTokenTest(){
+        LoginDto loginDto = new LoginDto("m@a.com", "192009alaa" , "token");
         when(authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getEmail(),
@@ -49,7 +62,7 @@ public class GenerateTokenTest {
     }
 
     @Test
-    public void testValidateTokenSuccess() {
+    public void validateTokenSuccessTest() {
 
        try(MockedStatic<Jwts> mockedJwts = Mockito.mockStatic(Jwts.class)) {
            Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
@@ -77,7 +90,7 @@ public class GenerateTokenTest {
 
     }
     @Test
-    public void testValidateTokenFalse(){
+    public void ValidateTokenFailedTest(){
         assertThrows(Exception.class , ()->{
             boolean result = jwtGenerator.validateToken("validToken");
             assertThat(result).isEqualTo(false);
@@ -85,7 +98,7 @@ public class GenerateTokenTest {
 
     }
     @Test
-    public void getUsernameFromJwtSuccess() {
+    public void getUsernameFromJwtSuccessTest() {
 
        try (MockedStatic<Jwts> mockedJwts = Mockito.mockStatic(Jwts.class)){
            Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

@@ -20,14 +20,14 @@ public class MovieController {
     @GetMapping("")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
 
-    public ResponseEntity<?> GetAllMovies(String token , @RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> getAllMovies(String token , @RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "20") int size){
     return movieService.getAllMovies(token , page , size);
 }
 @GetMapping("/{id}")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 
-public ResponseEntity<?> GetMovieById(@PathVariable int id , String token){
+public ResponseEntity<?> getMovieById(@PathVariable int id , String token){
         return movieService.getMovieById(id , token);
 }
 

@@ -24,24 +24,28 @@ public class ValidateTokenControllerTest {
     ValitateTokenService valitateTokenService;
 
     @Test
-    void ValidateToken_True() throws Exception {
+    void validateTokenSuccessTest() throws Exception {
         Mockito.when(valitateTokenService.validateToken("token")).thenReturn(true);
         boolean result = valitateTokenService.validateToken("token");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/validate?token=token")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .contentType(MediaType.ALL_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+
         assertTrue(result);
+        System.out.println(MockMvcResultMatchers.content().string("false"));
 
     }
     @Test
-    void ValidateToken_false() throws Exception {
+    void validateTokenFail() throws Exception {
         Mockito.when(valitateTokenService.validateToken("valid_token")).thenReturn(false);
         boolean result = valitateTokenService.validateToken("valid_token");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/validate?token=valid_token")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .contentType(MediaType.ALL_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("false"));
         assertFalse(result);
     }
 

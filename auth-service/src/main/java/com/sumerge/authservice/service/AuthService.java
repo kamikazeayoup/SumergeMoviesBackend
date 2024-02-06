@@ -36,8 +36,13 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtGenerator jwtGenerator;
+    @Autowired
+    private CaptchaService captchaService;
 
     public ResponseEntity<String> register(RegisterDto registerDto) {
+        boolean captcha = captchaService.verify(registerDto.getCaptchaToken());
+        if(!captcha)
+            return new ResponseEntity<>("Invalid Captcha!", HttpStatus.BAD_REQUEST);
         try {
             if (userEntityRepository.existsByUsername(registerDto.getUsername())) {
                 return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -45,6 +50,7 @@ public class AuthService {
             if (userEntityRepository.existsByEmail(registerDto.getEmail())) {
                 return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
             }
+
             UserEntity user = new UserEntity();
             user.setUsername(registerDto.getUsername());
             user.setEmail(registerDto.getEmail());
@@ -63,6 +69,9 @@ public class AuthService {
 
     }
     public ResponseEntity<?> login(LoginDto loginDto) {
+        boolean captcha = captchaService.verify(loginDto.getCaptchaToken());
+        if(!captcha)
+            return new ResponseEntity<>("Invalid Captcha!", HttpStatus.BAD_REQUEST);
         if (loginDto.getEmail() == null || loginDto.getEmail().isEmpty() ||
                 loginDto.getPassword() == null || loginDto.getPassword().isEmpty()) {
             return new ResponseEntity<>("Email or password cannot be empty", HttpStatus.BAD_REQUEST);

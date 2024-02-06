@@ -21,7 +21,7 @@ public class JwtEntryPointTest {
     }
 
     @Test
-    public void testCommence() throws Exception {
+    public void commenceTest() throws Exception {
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,15 +14,17 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-
+@PropertySource("classpath:application.properties")
 public class JwtGenerator {
     @Value("${jwt.secret-key}")
-    String SECRET_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNjgyMDUwNywiaWF0IjoxNzA2ODIwNTA3fQ.2OTNSHysmHT62VmcOjSDxY-hZxTmoxfkfEOahY3A7_o";
+    String SECRET_KEY;
+    @Value("${jwt.expiration}")
+    long JWT_EXPIRATION;
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
+        Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
         Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
         String token = Jwts.builder()

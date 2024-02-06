@@ -1,4 +1,4 @@
-package com.sumerge.authservice.Config;
+package com.sumerge.authservice.config;
 
 import com.sumerge.authservice.jwt.JwtAuthEntryPoint;
 import com.sumerge.authservice.jwt.JwtAuthenticationFilter;

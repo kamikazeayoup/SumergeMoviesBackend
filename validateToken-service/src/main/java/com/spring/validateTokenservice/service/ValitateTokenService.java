@@ -12,9 +12,10 @@ import java.security.Key;
 @PropertySource("classpath:application.properties")
 public class ValitateTokenService {
     @Value("${jwt.secret-key}")
-    String SECRET_KEY ="eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNjgyMDUwNywiaWF0IjoxNzA2ODIwNTA3fQ.2OTNSHysmHT62VmcOjSDxY-hZxTmoxfkfEOahY3A7_o";
+    String SECRET_KEY;
 
     public boolean validateToken(String token) {
+        System.out.println(SECRET_KEY);
         Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
         try {
           Claims claims =  Jwts.parserBuilder()

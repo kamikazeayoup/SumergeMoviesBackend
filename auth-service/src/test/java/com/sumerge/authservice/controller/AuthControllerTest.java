@@ -37,10 +37,10 @@ public class AuthControllerTest {
 
 
     @Test
-    void loginSuccessful() throws Exception {
+    void loginSuccessfulTest() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
-    LoginDto auth = new LoginDto("m@a.com", "192009alaa");
+    LoginDto auth = new LoginDto("m@a.com", "192009alaa" , "token");
 
 
     MvcResult response = mockMvc
@@ -51,9 +51,9 @@ public class AuthControllerTest {
 }
 
 @Test
-    void RegisterSuccessful() throws Exception{
+    void registerSuccessfulTest() throws Exception{
     ObjectMapper objectMapper = new ObjectMapper();
-    RegisterDto registerDto = new RegisterDto("medo" ,"medo@a.com", "12345678" );
+    RegisterDto registerDto = new RegisterDto("medo" ,"medo@a.com", "12345678" , "token" );
     ResponseEntity responseEntity = new ResponseEntity<>("User registered success!", HttpStatus.OK);
     Mockito.when(authService.register(registerDto)).thenReturn(responseEntity);
     MvcResult response = mockMvc

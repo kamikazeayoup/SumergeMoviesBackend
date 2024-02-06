@@ -21,8 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -62,23 +64,25 @@ public class MovieControllerTest {
         movie2.setGenres(genres);
     }
     @Test
-    void getAllMovies() throws Exception{
+    void getAllMoviesSuccessTest() throws Exception{
         List<Movie> movieList = new ArrayList<>(Arrays.asList(movie1 , movie2));
         ResponseEntity r=new ResponseEntity(movieList , HttpStatus.OK);
 
-        Mockito.when(movieService.getAllMovies("ssaw" , 1 , 10)).thenReturn(r);
-        ResponseEntity result = movieService.getAllMovies("ssaw" , 1 , 10);
+        Mockito.when(movieService.getAllMovies("ssaw" , 0 , 10)).thenReturn(r);
+        ResponseEntity result = movieService.getAllMovies("ssaw" , 0 , 10);
         List<Movie> actualMovies = (List<Movie>) result.getBody();
 
-        System.out.println(movieService.getAllMovies("ssaw" , 1 , 10));
+        System.out.println(movieService.getAllMovies("ssaw" , 0 , 10));
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/movie")
+                        .get("/movie?token=token&page=0&size=20")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-                assertThat(actualMovies).hasSize(2);
+                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+
+        assertThat(actualMovies).hasSize(2);
     }
     @Test
-    void getMovieById() throws Exception{
+    void getMovieByIdSuccessTest() throws Exception{
         ResponseEntity response = new ResponseEntity(movie1 , HttpStatus.OK);
         Mockito.when(movieService.getMovieById(14 , "token")).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders

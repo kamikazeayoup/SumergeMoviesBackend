@@ -43,7 +43,7 @@ public class ValidationTokenIntegrationTest {
     }
 
     @Test
-    void testFetchDataFromValidationTokenReturnsTrue() throws IOException {
+    void fetchDataFromValidationTokenReturnsTrueTest() throws IOException {
 
         wireMockServer.stubFor(get(urlEqualTo("/api/validate?token=dummytoken"))
                 .willReturn(aResponse()

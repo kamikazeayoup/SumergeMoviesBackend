@@ -63,7 +63,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void getAllMovies_Mocked() {
+    void getAllMovies_SuccessMocked() {
         List<Movie> list = new ArrayList<>();
         list.add(movie1);
         list.add(movie2);
@@ -78,7 +78,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void getMoviesById_Mocked(){
+    void getMoviesById_SuccessMocked(){
         when(movieRepository.findById(14)).thenReturn(Optional.ofNullable(movie1));
         when(validationTokenService.CheckToken("token")).thenReturn(true);
         ResponseEntity response = movieService.getMovieById(14 , "token");
@@ -86,14 +86,14 @@ public class MovieServiceTest {
         assertEquals(Optional.ofNullable(movie1), response.getBody());
     }
     @Test
-    void getMoviesById_TokenIsNotValid_Mocked(){
+    void getMoviesByIdMocked_TokenIsNotValid(){
         when(validationTokenService.CheckToken("not-valid-token")).thenReturn(false);
         ResponseEntity response = movieService.getMovieById(14 , "not-valid-token");
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("the token is not right", response.getBody());
     }
     @Test
-    void getAllMovies_TokenNotValid_Mocked() {
+    void getAllMoviesMocked_TokenNotValid() {
         when(validationTokenService.CheckToken("not-valid-token")).thenReturn(false);
         ResponseEntity response = movieService.getAllMovies("not-valid-token" , 1 , 10);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
